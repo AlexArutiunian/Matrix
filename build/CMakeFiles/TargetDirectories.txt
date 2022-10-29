@@ -1,4 +1,0 @@
-/home/arutiunian/matrix/m/Matrix/build/CMakeFiles/matrix.dir
-/home/arutiunian/matrix/m/Matrix/build/CMakeFiles/tests_matrix.dir
-/home/arutiunian/matrix/m/Matrix/build/CMakeFiles/edit_cache.dir
-/home/arutiunian/matrix/m/Matrix/build/CMakeFiles/rebuild_cache.dir
