@@ -24,7 +24,7 @@ public:
         p_matrix = new T[size_m * size_m];
     }
 
-    // copy constructor
+    
     matrix_(const matrix_& other_matrix){
         this->colons = other_matrix.colons;
         this->rows = other_matrix.rows;
@@ -35,12 +35,11 @@ public:
 
     }
     
-    // destuctor for matrix
+   
     ~matrix_(){
         delete[] p_matrix; 
     }
 
-    // overload operator = 
 
     matrix_ & operator= (const matrix_& other_m){
         this->colons = other_m.colons;
@@ -57,16 +56,12 @@ public:
         return *this;
     } 
 
-    //overload operator +
-
     matrix_ & operator+ (const matrix_& other_m){
         for(int i = 0; i != other_m.colons * other_m.rows; ++i){
             this->p_matrix[i] += other_m.p_matrix[i];
         }
         return *this;
     }
-
-    //overload operator -
 
     matrix_ & operator- (const matrix_& other_m){
         for(int i = 0; i != other_m.colons * other_m.rows; ++i){
@@ -77,6 +72,7 @@ public:
 
     // method for elementary transformations 1st type
     // swap rows
+
     void fst_E(int n1, int n2){
         T temp;
         n1 -= 1;
@@ -109,8 +105,6 @@ public:
         }
     }
 
-    // method to make triangular matrix
-
     void triang_form(matrix_& m){
         
         if(m.colons == m.rows){
@@ -120,14 +114,14 @@ public:
                     if(m.p_matrix[(n + 1) * i] == 0){
                         m.fst_E(j + 1, i + 1);
                     }
-                    m.trd_E(j + 1, i + 1, -(m.p_matrix[n * j + i] / m.p_matrix[(n + 1) * i])); 
+                    else{
+                    	m.trd_E(j + 1, i + 1, -(m.p_matrix[n * j + i] / m.p_matrix[(n + 1) * i])); 
+                    }
                 }              
             }
         }
         
     }
-
-    // method to know determinant
 
     T det(const matrix_& m){
         matrix_ M = m;
@@ -145,9 +139,6 @@ public:
         return det;
     }
 
-
-    // method for stream input
-    // to overload operator >> 
     matrix_& read(std::istream& is, matrix_& m){
         for(int i = 0; i < m.colons * m.rows; ++i){
             is >> m.p_matrix[i];    
