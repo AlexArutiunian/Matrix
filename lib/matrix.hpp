@@ -1,6 +1,8 @@
 #pragma once 
 
 #include <iostream>
+#include <algorithm>
+#include <cassert>
 
 namespace matrix{
 template <typename T> class matrix_{
@@ -23,16 +25,16 @@ public:
         colons = size_m;
         p_matrix = new T[size_m * size_m];
     }
-
     
     matrix_(const matrix_& other_matrix){
-        this->colons = other_matrix.colons;
-        this->rows = other_matrix.rows;
-        this->p_matrix = new T[other_matrix.colons * other_matrix.rows];
-        for(int i = 0; i != other_matrix.rows * other_matrix.colons; ++i){
-            this->p_matrix[i] = other_matrix.p_matrix[i];
-        }
+        colons = other_matrix.colons;
+        rows = other_matrix.rows;
+        p_matrix = new T[other_matrix.colons * other_matrix.rows];
 
+        // i use more quick function copy_n (copying of 8 bites for one iteration)
+        // than copy with for(...) (copying of 1 bites for one iteration)
+
+        std::copy_n(other_matrix.p_matrix, colons * rows, p_matrix);
     }
     
    
@@ -40,30 +42,31 @@ public:
         delete[] p_matrix; 
     }
 
-
-    matrix_ & operator= (const matrix_& other_m){
-        this->colons = other_m.colons;
-        this->rows = other_m.rows;
-        if(this->p_matrix != nullptr){
-            delete[] this->p_matrix;
-        }
-        this->p_matrix = new T[other_m.colons * other_m.rows];
-
-        for(int i = 0; i != other_m.colons * other_m.rows; ++i){
-            this->p_matrix[i] = other_m.p_matrix[i];
-        }
-
+    matrix_& operator= (matrix_ other_m){
+        swap(other_m);
         return *this;
     } 
+    void swap(matrix_& m){
+        std::swap(p_matrix, m.p_matrix);
+        std::swap(colons, m.colons);
+        std::swap(rows, m.rows);
+    }
 
-    matrix_ & operator+ (const matrix_& other_m){
+    matrix_& operator= (std::initializer_list<T> elems_matrix){
+        p_matrix = new T[elems_matrix.size()];
+        assert(elems_matrix.size() == colons * rows);
+        std::copy(elems_matrix.begin(), elems_matrix.end(), p_matrix);
+        return *this;
+    }
+
+    matrix_& operator+ (const matrix_& other_m){
         for(int i = 0; i != other_m.colons * other_m.rows; ++i){
             this->p_matrix[i] += other_m.p_matrix[i];
         }
         return *this;
     }
 
-    matrix_ & operator- (const matrix_& other_m){
+    matrix_& operator- (const matrix_& other_m){
         for(int i = 0; i != other_m.colons * other_m.rows; ++i){
             this->p_matrix[i] -= other_m.p_matrix[i];
         }
@@ -106,17 +109,12 @@ public:
     }
 
     void triang_form(matrix_& m){
-        
         if(m.colons == m.rows){
             int n = m.colons;
             for(int i = 0; i != n; ++i){
                 for(int j = i + 1; j != n; ++j){
-                    if(m.p_matrix[(n + 1) * i] == 0){
-                        m.fst_E(j + 1, i + 1);
-                    }
-                    else{
-                    	m.trd_E(j + 1, i + 1, -(m.p_matrix[n * j + i] / m.p_matrix[(n + 1) * i])); 
-                    }
+                    if(m.p_matrix[(n + 1) * i] == 0){ m.fst_E(j + 1, i + 1); }
+                    else{ m.trd_E(j + 1, i + 1, -(m.p_matrix[n * j + i] / m.p_matrix[(n + 1) * i]));}
                 }              
             }
         }
@@ -130,12 +128,10 @@ public:
         int n = M.colons;
         if(M.p_matrix[0] != 0){
             det = M.p_matrix[0];
-            for(int i = 1; i != n; ++i){
-            det *= M.p_matrix[(n + 1) * i];
-            }
+            for(int i = 1; i != n; ++i)
+                det *= M.p_matrix[(n + 1) * i];
         }  
         else return 0;
-        
         return det;
     }
 

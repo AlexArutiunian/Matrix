@@ -13,8 +13,11 @@ int main(){
     std::cin >> n;
     matrix::matrix_<T> m(n);
     std::cin >> m;
+    matrix::matrix_<T> m2(m);
+    matrix::matrix_<T> m3 = m;
     T det = m.det(m);
+    m3 = {1, 1, 0, 0, 1, 0, 0, 0, 1};
     
-    std::cout << det;
+    std::cout << m2 << m3;
 
 }
