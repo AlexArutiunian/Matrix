@@ -59,14 +59,14 @@ public:
         return *this;
     }
 
-    matrix_& operator+ (const matrix_& other_m){
+    matrix_& operator+= (const matrix_& other_m){
         for(int i = 0; i != other_m.colons * other_m.rows; ++i){
             this->p_matrix[i] += other_m.p_matrix[i];
         }
         return *this;
     }
 
-    matrix_& operator- (const matrix_& other_m){
+    matrix_& operator-= (const matrix_& other_m){
         for(int i = 0; i != other_m.colons * other_m.rows; ++i){
             this->p_matrix[i] -= other_m.p_matrix[i];
         }
