@@ -80,7 +80,7 @@ public:
         T temp;
         n1 -= 1;
         n2 -= 1;
-        for(int i = 0; i != colons; ++i){
+        for(int i = 0; i != static_cast<int>(colons); ++i){
             temp = p_matrix[colons * n1 + i];
             p_matrix[colons * n1 + i] = p_matrix[colons * n2 + i];
             p_matrix[colons * n2 + i] = temp;
@@ -103,7 +103,7 @@ public:
     void trd_E(int n1, int n2, T a){
         n1 -= 1;
         n2 -= 1;
-        for(int i = 0; i != colons; ++i){
+        for(int i = 0; i != static_cast<int>(colons); ++i){
             p_matrix[colons * n1 + i] += a * p_matrix[colons * n2 + i];  
         }
     }
@@ -128,7 +128,7 @@ public:
         int n = M.colons;
         if(M.p_matrix[0] != 0){
             det = M.p_matrix[0];
-            for(int i = 1; i != n; ++i)
+            for(int i = 1; i != static_cast<int>(n); ++i)
                 det *= M.p_matrix[(n + 1) * i];
         }  
         else return 0;
@@ -136,7 +136,7 @@ public:
     }
 
     matrix_& read(std::istream& is, matrix_& m){
-        for(int i = 0; i < m.colons * m.rows; ++i){
+        for(int i = 0; i < static_cast<int>(m.colons * m.rows); ++i){
             is >> m.p_matrix[i];    
         }
         return m;
@@ -144,7 +144,7 @@ public:
     // method for stream output
     // to overload operator <<
     void print(std::ostream& os){
-        for(int i = 1; i <= colons * rows; ++i){
+        for(int i = 1; i <= static_cast<int>(colons * rows); ++i){
             os << p_matrix[i - 1] << " ";  
             if(i % colons == 0) os << '\n';   
         }
