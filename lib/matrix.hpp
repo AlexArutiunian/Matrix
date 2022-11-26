@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cassert>
+#include <math.h>
 
 namespace matrix{
 template <typename T> class matrix_{
@@ -100,30 +101,40 @@ public:
     // method for elementary transformations 3rd type
     // row1 = row1 + row2 * a
     
-    void trd_E(int n1, int n2, T a){
+    void trd_E(int n1, int n2, T a, T EPS){
         n1 -= 1;
         n2 -= 1;
         for(int i = 0; i != static_cast<int>(colons); ++i){
-            p_matrix[colons * n1 + i] += a * p_matrix[colons * n2 + i];  
+            p_matrix[colons * n1 + i] += a * p_matrix[colons * n2 + i];
+            if(fabs(p_matrix[colons * n1 + i]) <= EPS) p_matrix[colons * n1 + i] = 0;   
         }
     }
 
-    void triang_form(matrix_& m){
+    void triang_form(matrix_& m, T EPS){
         if(m.colons == m.rows){
             int n = m.colons;
             for(int i = 0; i != n; ++i){
                 for(int j = i + 1; j != n; ++j){
-                    if(m.p_matrix[(n + 1) * i] == 0){ m.fst_E(j + 1, i + 1); }
-                    else{ m.trd_E(j + 1, i + 1, -(m.p_matrix[n * j + i] / m.p_matrix[(n + 1) * i]));}
+                    if(m.p_matrix[(n + 1) * i] == 0){
+                        m.fst_E(j + 1, i + 1);
+                        std::cout << m << '\n';
+                        }
+                    else{ 
+                        
+                        m.trd_E(j + 1, i + 1, -(m.p_matrix[n * j + i] / m.p_matrix[(n + 1) * i]), EPS);
+                        std::cout << m << '\n';
+                    }
+                    
                 }              
             }
+            std::cout << m << '\n';
         }
         
     }
 
-    T det(const matrix_& m){
+    T det(const matrix_& m, T EPS){
         matrix_ M = m;
-        M.triang_form(M);
+        M.triang_form(M, EPS);
         T det = 0;
         int n = M.colons;
         if(M.p_matrix[0] != 0){
