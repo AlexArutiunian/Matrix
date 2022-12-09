@@ -14,21 +14,27 @@ int main(){
     size_t n = 10;
     T elem;
     int numtests = 100000;
-    test::test(n, numtests, 100);
+    test::test(n, numtests, 10);
     std::ifstream testfile;
+    std::ofstream resfile;
+    resfile.open("res.txt");
     testfile.open("test.1");
     for(int i = 0; i < numtests; ++i){
         testfile >> n;
-        matrix::matrix_<T> m(n);
+        resfile << i << ")" << std::endl;
+        matrix::math_matrix<T> m(n);
         testfile >> m;
+        resfile << m;
         
-        T det = m.det(m);
+        T det = m.det(0.01);
+        resfile << det << '\n';
      /*   std::cout << '\n';
         std::cout << m;
         std::cout << "res " << i + 1 << " = " << det << std::endl;*/
 
     }
     testfile.close();
+    resfile.close();
 
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;

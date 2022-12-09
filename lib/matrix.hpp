@@ -10,38 +10,59 @@ template <typename T> class matrix_{
 private:
     size_t rows;    
     size_t colons; 
-    T * p_matrix;
+    T* p_matrix;
+
+protected:
+    size_t get_rows() const{
+        return this->rows;
+    }
+    size_t get_colons() const{
+        return this->colons;
+    }
+    T* get_elems() const{
+        return this->p_matrix;
+    }
 
 public:   
-    // constuctor for matrix size of NxM
-    matrix_(size_t rs, size_t cs){
-        rows = rs;
-        colons = cs;
-        p_matrix = new T[rs * cs];
-        
-    }     
-    // constuctor for matrix size of NxN (square_matrix)
-    matrix_(size_t size_m){
-        rows = size_m;
-        colons = size_m;
+    // two constuctors for matrix size of NxM
+
+    matrix_(size_t rs, size_t cs): rows(rs), colons(cs){ p_matrix = new T[rs * cs]; }     
+
+    matrix_(size_t rs, size_t cs, std::initializer_list<T> elems_matrix): rows(rs), colons(cs){
+        p_matrix = new T[cs * rs];
+
+        /*
+        // using more quick function copy (copying of 8 bites for one iteration)
+        // than for(...) (copying of 1 bites for one iteration)
+        */
+
+        std::copy(elems_matrix.begin(), elems_matrix.end(), p_matrix);
+    }
+
+    // two constuctors for matrix size of NxN (square_matrix)
+    
+    matrix_(size_t size_m): rows(size_m), colons(size_m){ p_matrix = new T[size_m * size_m]; }
+
+    matrix_(size_t size_m, std::initializer_list<T> elems_matrix): rows(size_m), colons(size_m){
         p_matrix = new T[size_m * size_m];
+        std::copy(elems_matrix.begin(), elems_matrix.end(), p_matrix);
     }
     
-    matrix_(const matrix_& other_matrix){
-        colons = other_matrix.colons;
-        rows = other_matrix.rows;
+    matrix_(const matrix_& other_matrix): rows(other_matrix.rows), colons(other_matrix.colons){
         p_matrix = new T[other_matrix.colons * other_matrix.rows];
-
-        // i use more quick function copy_n (copying of 8 bites for one iteration)
-        // than copy with for(...) (copying of 1 bites for one iteration)
-
         std::copy_n(other_matrix.p_matrix, colons * rows, p_matrix);
     }
-    
+
+    matrix_(size_t rs, size_t cs, T* elems_matrix): rows(rs), colons(cs){
+        p_matrix = new T[cs * rs];
+        std::copy(elems_matrix[0], elems_matrix[cs * rs - 1], p_matrix);
+    }
    
     ~matrix_(){
         delete[] p_matrix; 
     }
+
+    
 
     matrix_& operator= (matrix_ other_m){
         swap(other_m);
@@ -74,77 +95,7 @@ public:
         return *this;
     }
 
-    // method for elementary transformations 1st type
-    // swap rows
-
-    void fst_E(int n1, int n2){
-        T temp;
-        n1 -= 1;
-        n2 -= 1;
-        for(int i = 0; i != static_cast<int>(colons); ++i){
-            temp = p_matrix[colons * n1 + i];
-            p_matrix[colons * n1 + i] = p_matrix[colons * n2 + i];
-            p_matrix[colons * n2 + i] = temp;
-        }
-    }
-
-    // method for elementary transformations 2nd type
-    // row * a, a != 0
-
-    void snd_E(int n, T a){
-        n -= 1;
-        for(int i = 0; i != colons; ++i){
-            p_matrix[colons * n + i] *= a;  
-        }
-    }
-
-    // method for elementary transformations 3rd type
-    // row1 = row1 + row2 * a
     
-    void trd_E(int n1, int n2, T a, T EPS){
-        n1 -= 1;
-        n2 -= 1;
-        for(int i = 0; i != static_cast<int>(colons); ++i){
-            p_matrix[colons * n1 + i] += a * p_matrix[colons * n2 + i];
-            if(fabs(p_matrix[colons * n1 + i]) <= EPS) p_matrix[colons * n1 + i] = 0;   
-        }
-    }
-
-    void triang_form(matrix_& m, T EPS){
-        if(m.colons == m.rows){
-            int n = m.colons;
-            for(int i = 0; i != n; ++i){
-                for(int j = i + 1; j != n; ++j){
-                    if(m.p_matrix[(n + 1) * i] == 0){
-                        m.fst_E(j + 1, i + 1);
-                        std::cout << m << '\n';
-                        }
-                    else{ 
-                        
-                        m.trd_E(j + 1, i + 1, -(m.p_matrix[n * j + i] / m.p_matrix[(n + 1) * i]), EPS);
-                        std::cout << m << '\n';
-                    }
-                    
-                }              
-            }
-            std::cout << m << '\n';
-        }
-        
-    }
-
-    T det(const matrix_& m, T EPS){
-        matrix_ M = m;
-        M.triang_form(M, EPS);
-        T det = 0;
-        int n = M.colons;
-        if(M.p_matrix[0] != 0){
-            det = M.p_matrix[0];
-            for(int i = 1; i != static_cast<int>(n); ++i)
-                det *= M.p_matrix[(n + 1) * i];
-        }  
-        else return 0;
-        return det;
-    }
 
     matrix_& read(std::istream& is, matrix_& m){
         for(int i = 0; i < static_cast<int>(m.colons * m.rows); ++i){
@@ -152,8 +103,12 @@ public:
         }
         return m;
     }
+
+    /*
     // method for stream output
     // to overload operator <<
+    */
+
     void print(std::ostream& os){
         for(int i = 1; i <= static_cast<int>(colons * rows); ++i){
             os << p_matrix[i - 1] << " ";  
@@ -162,20 +117,149 @@ public:
     }
 };   
 
+/*
 // overload operator >>
 // with method 'read' in class matrix_
+*/
+
 template <typename T>
 std::istream& operator>> (std::istream& is, matrix_<T>& m){
     m.read(is, m);
     return is;
 } 
 
+/*
 // overload operator <<
 // with method 'print' in class matrix_
+*/
+
 template <typename T>
 std::ostream& operator<< (std::ostream& os, matrix_<T>& m){
     m.print(os);
     return os;
 }
+
+/*
+// derived class for more 
+// mathematical operations with matrices 
+*/
+
+template <typename T> 
+class math_matrix: public matrix_<T> {
+private: 
+    using base_ = matrix_<T>;
+   /* auto& colons_ = base_::colons;
+    using rows_ = base_<T>::rows;
+    using p_elements = base_<T>::p_matrix;*/
+public:
+    
+    math_matrix(size_t rs, size_t cs): 
+    base_::matrix_(rs, cs) {}
+
+    math_matrix(size_t n): 
+    base_::matrix_(n) {}
+
+    template <typename other_matrix_type = T>
+    math_matrix(const matrix_<other_matrix_type>& other_m): 
+    matrix_<other_matrix_type>::matrix_(other_m) {}
+
+    math_matrix(size_t rs, size_t cs, std::initializer_list<T> elems_matrix):
+    base_::matrix_(rs, cs, elems_matrix) {}
+
+    virtual ~math_matrix(){}
+ 
+    /*
+    // method for elementary transformations 1st type
+    // swap rows
+    */
+
+    void fst_E(int n1, int n2){
+        T temp;
+        n1 -= 1;
+        n2 -= 1;
+
+        size_t cs = base_::get_colons();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+
+        for(int i = 0; i != static_cast<int>(cs); ++i){
+            temp = p_m[cs * n1 + i];
+            p_m[cs * n1 + i] = p_m[cs * n2 + i];
+            p_m[cs * n2 + i] = temp;
+        }
+    }
+
+    /*
+    // method for elementary transformations 2nd type
+    // row * a, a != 0
+    */
+
+    void snd_E(int n, T a){
+        n -= 1;
+
+        size_t cs = base_::get_colons();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+
+        for(int i = 0; i != cs; ++i){
+            p_m[cs * n + i] *= a;  
+        }
+    }
+
+    /*
+    // method for elementary transformations 3rd type
+    // row1 = row1 + row2 * a
+    */
+
+    void trd_E(int n1, int n2, T a, T EPS){
+        n1 -= 1;
+        n2 -= 1;
+        
+        size_t cs = base_::get_colons();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+
+        for(int i = 0; i != static_cast<int>(cs); ++i){
+            p_m[cs * n1 + i] += a * p_m[cs * n2 + i];
+            if(fabs(p_m[cs * n1 + i]) <= EPS){
+                p_m[cs * n1 + i] = 0;   
+            }    
+        }
+    }
+
+    void triang_form(T EPS){
+
+        size_t cs = base_::get_colons();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+
+        if(cs == rs){
+            for(int i = 0; i != cs; ++i){
+                for(int j = i + 1; j != cs; ++j){
+                    if(p_m[(cs + 1) * i] == 0) this->fst_E(j + 1, i + 1); 
+                    else this->trd_E(j + 1, i + 1, -(p_m[cs * j + i] / p_m[(cs + 1) * i]), EPS);  
+                }              
+            }    
+        }   
+    }
+
+    T det(T EPS){
+
+        size_t cs = base_::get_colons();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+
+        this->triang_form(EPS);
+        T det = 0;
+        
+        if(p_m[cs * rs - 1] != 0){
+            det = p_m[0];
+            for(int i = 1; i != static_cast<int>(cs); ++i)
+                det *= p_m[(cs + 1) * i];
+        }  
+        else return 0;
+        return det;
+    }   
+}; 
 
 } // namespace matrix
