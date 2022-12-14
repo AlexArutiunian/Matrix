@@ -82,12 +82,15 @@ public:
         delete[] p_matrix; 
     }
 
+private:     
      
     void swap(matrix_& m){
         std::swap(p_matrix, m.p_matrix);
         std::swap(colons, m.colons);
         std::swap(rows, m.rows);
     }
+
+public:
 
     matrix_& operator= (std::initializer_list<T> elems_matrix){
         p_matrix = new T[elems_matrix.size()];
