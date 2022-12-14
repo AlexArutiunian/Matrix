@@ -249,14 +249,14 @@ public:
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
 
-        if(cs == rs){
-            for(int i = 0; i != cs; ++i){
-                for(int j = i + 1; j != cs; ++j){
-                    if(p_m[(cs + 1) * i] == 0) this->fst_E(j + 1, i + 1); 
-                    else this->trd_E(j + 1, i + 1, -(p_m[cs * j + i] / p_m[(cs + 1) * i]), EPS);  
-                }              
-            }    
-        }   
+        
+        for(int i = 0; i != rs; ++i){
+            for(int j = i + 1; j != cs; ++j){
+                if(p_m[(cs + 1) * i] == 0) this->fst_E(j + 1, i + 1); 
+                else this->trd_E(j + 1, i + 1, -(p_m[cs * j + i] / p_m[(cs + 1) * i]), EPS);  
+            }              
+        }    
+           
     }
 
     T det(T EPS){
@@ -268,12 +268,15 @@ public:
         this->triang_form(EPS);
         T det = 0;
         
-        if(p_m[cs * rs - 1] != 0){
-            det = p_m[0];
-            for(int i = 1; i != static_cast<int>(cs); ++i)
-                det *= p_m[(cs + 1) * i];
-        }  
-        else return 0;
+        if(cs == rs){
+            if(p_m[cs * rs - 1] != 0){
+                det = p_m[0];
+                for(int i = 1; i != static_cast<int>(cs); ++i)
+                    det *= p_m[(cs + 1) * i];
+            }  
+            else return 0;
+        }
+        else std::cout << "It is not square matrix. I can not solve determinant" << std::endl;
         return det;
     }   
 }; 
