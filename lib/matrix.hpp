@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <algorithm>
-#include <cassert>
 #include <math.h>
 
 namespace matrix{
@@ -47,27 +46,43 @@ public:
         p_matrix = new T[size_m * size_m];
         std::copy(elems_matrix.begin(), elems_matrix.end(), p_matrix);
     }
-    
-    matrix_(const matrix_& other_matrix): rows(other_matrix.rows), colons(other_matrix.colons){
-        p_matrix = new T[other_matrix.colons * other_matrix.rows];
-        std::copy_n(other_matrix.p_matrix, colons * rows, p_matrix);
-    }
 
     matrix_(size_t rs, size_t cs, T* elems_matrix): rows(rs), colons(cs){
         p_matrix = new T[cs * rs];
         std::copy(elems_matrix[0], elems_matrix[cs * rs - 1], p_matrix);
+    }
+    
+    
+    /*
+    // the Rule of five
+    */
+   
+    matrix_(const matrix_& other_matrix): rows(other_matrix.rows), colons(other_matrix.colons){
+        p_matrix = new T[other_matrix.colons * other_matrix.rows];
+        std::copy_n(other_matrix.p_matrix, colons * rows, p_matrix);
+    }
+    
+    matrix_(matrix_&& other_matrix): p_matrix(nullptr), rows(0), colons(0){ 
+        swap(other_matrix);
+    }
+
+
+    matrix_& operator= (matrix_& other_m){
+        matrix_ copy_(other_m);
+        swap(copy_);
+        return *this;
+    }
+
+    matrix_& operator= (matrix_&& other_m){
+        swap(other_m);
+        return *this;
     }
    
     ~matrix_(){
         delete[] p_matrix; 
     }
 
-    
-
-    matrix_& operator= (matrix_ other_m){
-        swap(other_m);
-        return *this;
-    } 
+     
     void swap(matrix_& m){
         std::swap(p_matrix, m.p_matrix);
         std::swap(colons, m.colons);
@@ -94,8 +109,6 @@ public:
         }
         return *this;
     }
-
-    
 
     matrix_& read(std::istream& is, matrix_& m){
         for(int i = 0; i < static_cast<int>(m.colons * m.rows); ++i){
