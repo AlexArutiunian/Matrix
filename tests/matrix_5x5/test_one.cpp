@@ -3,7 +3,7 @@
 
 #include "../lib/matrix.hpp"
 
-using T = double;
+using T = long double;
 
 int main(){
 
