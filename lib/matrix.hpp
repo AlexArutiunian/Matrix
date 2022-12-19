@@ -7,7 +7,7 @@
 namespace matrix{
 template <typename T> class matrix_{
 private:
-    size_t rows;    
+    size_t rows;     
     size_t colons; 
     T* p_matrix;
 
@@ -25,7 +25,21 @@ protected:
 public:   
     // two constuctors for matrix size of NxM
 
-    matrix_(size_t rs, size_t cs): rows(rs), colons(cs){ p_matrix = new T[rs * cs]; }     
+    matrix_(size_t rs, size_t cs): rows(rs), colons(cs){
+        p_matrix = new T[rs * cs];
+        if(rs == cs){
+            for(size_t i = 1; i != rs + 1; ++i){
+                /*first way*/
+
+                //p_matrix[rs * i + i] = 1;
+
+                /*second way
+                in which order of operations is important */
+
+                (*(this))(i, i) = 1;
+            }
+        }
+    }     
 
     matrix_(size_t rs, size_t cs, std::initializer_list<T> elems_matrix): rows(rs), colons(cs){
         p_matrix = new T[cs * rs];
@@ -40,7 +54,12 @@ public:
 
     // two constuctors for matrix size of NxN (square_matrix)
     
-    matrix_(size_t size_m): rows(size_m), colons(size_m){ p_matrix = new T[size_m * size_m]; }
+    matrix_(size_t size_m): rows(size_m), colons(size_m){
+        p_matrix = new T[size_m * size_m]; 
+        for(size_t i = 1; i != rows + 1; ++i){
+            (*(this))(i, i) = 1;
+        }
+    }
 
     matrix_(size_t size_m, std::initializer_list<T> elems_matrix): rows(size_m), colons(size_m){
         p_matrix = new T[size_m * size_m];
@@ -82,6 +101,7 @@ public:
         delete[] p_matrix; 
     }
 
+
 private:     
      
     void swap(matrix_& m){
@@ -91,6 +111,10 @@ private:
     }
 
 public:
+
+    T& operator() (const size_t i, const size_t j){
+        return p_matrix[colons * (i - 1)  + (j - 1)];
+    }
 
     matrix_& operator= (std::initializer_list<T> elems_matrix){
         p_matrix = new T[elems_matrix.size()];
