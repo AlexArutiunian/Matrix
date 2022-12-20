@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
 
-#include "../lib/matrix.hpp"
+#include "../../lib/matrix.hpp"
 
-using T = long double;
+using T = double;
 
 int main(){
 
@@ -22,25 +22,25 @@ int main(){
 
     std::ofstream out_matrix("out_m.txt");
     
-    for(int i = 0; i != 40; i++){
-        int row1 = std::rand() % 5;
-        int row2 = std::rand() % 5;
-        int lyambda = std::rand() % 10;
+    for(int i = 0; i != 50; i++){
+        int row1 = std::rand() % 6;
+        int row2 = std::rand() % 6;
+        int lyambda = (std::rand() % 5) - 2;
         if(!lyambda) lyambda += 1;
         if(!row1) row1 += 1;
         if(!row2) row2 += 1;
         if(row1 == row2) row1 += 1;
-        std::cout <<  i << ") к строке " << row1 << " прибавилась строка " << row2 <<
+        out_matrix <<  i << ") к строке " << row1 << " прибавилась строка " << row2 <<
         " умноженная на " << lyambda << std::endl;
         m.trd_E(row1, row2, lyambda, EPS); 
-        std::cout << m;
+        out_matrix << m << std::endl;
         matrix::math_matrix<T> m_copy(m);
         det = m_copy.det(EPS);
-        std::cout << "Треугольная форма:\n " << m_copy;
-        std::cout << "детерминант после преобразований: " << det << "\n\n";
+        out_matrix << "Треугольная форма:\n " << m_copy << std::endl;
+        out_matrix << "детерминант после преобразований: " << det << "\n\n";
     }
     
-    out_matrix << m;
+    
 
     det = m.det(EPS);
     std::cout << det << std::endl; 

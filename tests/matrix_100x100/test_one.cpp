@@ -14,27 +14,27 @@ int main(){
     matrix::math_matrix<T> m(n); 
 
     in_matrix >> m;
-    std::cout << m;
+  //  std::cout << m;
 
     std::ofstream out_matrix("out_m.txt");
     
-    for(int i = 0; i != 60; i++){
-        int row1 = std::rand() % 5;
-        int row2 = std::rand() % 5;
-        int lyambda = std::rand() % 10;
+    for(int i = 0; i != 1000; i++){
+        int row1 = std::rand() % 101;
+        int row2 = std::rand() % 101;
+        int lyambda = (std::rand() % 3) - 1;
         if(!lyambda) lyambda += 1;
         if(!row1) row1 += 1;
         if(!row2) row2 += 1;
         if(row1 == row2) row1 += 1;
-        std::cout <<  i << R"()) row numder ")" << row1 << 
+      /*  std::cout <<  i << R"()) row numder ")" << row1 << 
         R"(" + row number ")" << row2 <<
-        R"(" * )" << lyambda << std::endl;
+        R"(" * )" << lyambda << std::endl;*/
         m.trd_E(row1, row2, lyambda, EPS); 
       //  std::cout << m;
         matrix::math_matrix<T> m_copy(m);
         T det = m_copy.det(EPS);
      //   std::cout << "Треугольная форма:\n " << m_copy;
-        std::cout << "determinant after transformatoins: " << det << "\n\n";
+     //   std::cout << "determinant after transformatoins: " << det << "\n\n";
     }
     
     out_matrix << m;
