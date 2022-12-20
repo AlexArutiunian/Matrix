@@ -267,20 +267,27 @@ public:
         }
     }
 
-    void triang_form(T EPS){
+    int triang_form(T EPS){
 
         size_t cs = base_::get_colons();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
 
+        // variable 'permutation' for 
+        // the control of swaping rows
+
+        int permutation = 0;
         
         for(int i = 0; i != rs; ++i){
             for(int j = i + 1; j != cs; ++j){
-                if(p_m[(cs + 1) * i] == 0) this->fst_E(j + 1, i + 1); 
+                if(p_m[(cs + 1) * i] == 0){
+                    permutation += 1;
+                    this->fst_E(j + 1, i + 1); 
+                }    
                 else this->trd_E(j + 1, i + 1, -(p_m[cs * j + i] / p_m[(cs + 1) * i]), EPS);  
             }              
-        }    
-           
+        }  
+        return permutation;     
     }
 
     T det(T EPS){
@@ -289,7 +296,7 @@ public:
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
 
-        this->triang_form(EPS);
+        int per = this->triang_form(EPS);
         T det = 0;
         
         if(cs == rs){
@@ -300,7 +307,13 @@ public:
             }  
             else return 0;
         }
-        else std::cout << "It is not square matrix. I can not solve determinant" << std::endl;
+        
+        if(per != 0){
+            for(int i = 0; i != per; ++i){
+                det *= (-1);
+            }
+        }
+        if(cs != rs) std::cout << "It is not square matrix. I can not solve determinant" << std::endl;
         return det;
     }   
 }; 
