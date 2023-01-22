@@ -267,7 +267,7 @@ public:
         }
     }
 
-    int triang_form(T EPS){
+    int triang_form_Gauss(T EPS){
 
         size_t cs = base_::get_colons();
         size_t rs = base_::get_rows();
@@ -278,6 +278,7 @@ public:
 
         int permutation = 0;
         
+
         for(int i = 0; i != rs; ++i){
             for(int j = i + 1; j != cs; ++j){
                 if(p_m[(cs + 1) * i] == 0){
@@ -290,15 +291,102 @@ public:
         return permutation;     
     }
 
-    T det(T EPS){
+    int triang_form_Gauss_max(T EPS){
 
         size_t cs = base_::get_colons();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
 
-        int per = this->triang_form(EPS);
-        T det = 0;
+        // variable 'permutation' for 
+        // the control of swaping rows
+
+        int permutation = 0;
         
+
+        for(int i = 0; i != rs; ++i){
+            for(int j = i + 1; j != cs; ++j){
+                T coef = this->find_max_in_row(i);
+                this->trd_E(j + 1, i + 1, -(p_m[cs * j + i] / coef), EPS);  
+            }              
+        }  
+        return permutation;     
+    }
+
+    int triang_form_Bareiss(T EPS){
+
+        size_t cs = base_::get_colons();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+
+        // variable 'permutation' for 
+        // the control of swaping rows
+
+        int permutation = 0;
+        
+        
+        for(int i = 0; i != rs - 1; ++i){
+            for(int j = i + 1; j != cs; ++j){
+                T max = this->find_max_();
+                if(i == 0){
+                    T coef = -p_m[cs * j + i];
+                    this->snd_E(j + 1, (*this)(i + 1, i + 1));
+                    this->trd_E(j + 1, i + 1, coef, EPS);   
+                }
+               
+        
+                if(i != 0){
+                    
+                    if(p_m[(cs + 1) * i] == 0){
+                        this->fst_E(j + 1, i + 1); 
+                    }
+                    else{
+                        if(p_m[(cs + 1) * (i - 1)] == 0) return -1;
+                        else{
+                            T coef = -(p_m[cs * j + i] / p_m[(cs + 1) * (i - 1)]);
+                            this->snd_E(j + 1, ((*this)(i + 1, i + 1)) / p_m[(cs + 1) * (i - 1)]);
+                            this->trd_E(j + 1, i + 1, coef, EPS); 
+                        }
+                    }    
+                   
+                }  
+               
+  
+            }              
+        }  
+        return permutation;     
+    }
+
+    T det_Bareiss(T EPS){
+
+        size_t cs = base_::get_colons();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+
+        if(cs != rs){
+            std::cout << "It is not square matrix. I can not solve determinant" << std::endl;
+            return 0;
+        }    
+        int per = this->triang_form_Bareiss(EPS);
+        if(per == -1){
+            std::cout << "Row or colons of nulls is in matrix! => det = 0 " << std::endl;
+            return 0;
+        }    
+        T det = 0;
+        return (*this)(cs, cs);
+    } 
+
+    T det_Gauss(T EPS){
+
+        size_t cs = base_::get_colons();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+
+        int per = this->triang_form_Gauss_max(EPS);
+        T det = 0;
+        if(cs != rs){
+            std::cout << "It is not square matrix. I can not solve determinant" << std::endl;
+            return 0;
+        }    
         if(cs == rs){
             if(p_m[cs * rs - 1] != 0){
                 det = p_m[0];
@@ -308,14 +396,43 @@ public:
             else return 0;
         }
         
-        if(per != 0){
+        if((per != 0) && (det != 0)){
             for(int i = 0; i != per; ++i){
                 det *= (-1);
             }
+        
         }
-        if(cs != rs) std::cout << "It is not square matrix. I can not solve determinant" << std::endl;
+        if(abs(det) == 0) det = 0;
         return det;
-    }   
+    }  
+
+    T find_max_(){
+        size_t cs = base_::get_colons();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+        T max = p_m[0];
+        for (int i = 1; i < cs * rs; i++) {
+            if (abs(p_m[i]) > abs(max)) {
+                max = p_m[i];
+            }
+        }
+        return max;
+    }    
+
+    T find_max_in_row(int i){
+        size_t cs = base_::get_colons();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+        T max = p_m[i * cs];
+        for (int j = 1; j != cs; j++) {
+            if (abs(p_m[i * cs + j]) > abs(max)) {
+                max = p_m[i * cs + j];
+            }
+            
+        }
+        return max;
+    }
+    
 }; 
 
 } // namespace matrix

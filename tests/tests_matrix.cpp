@@ -26,7 +26,7 @@ int main(){
         testfile >> m;
         resfile << m;
         
-        T det = m.det(0.01);
+        T det = m.det_Bareiss(0.01);
         resfile << det << '\n';
      /*   std::cout << '\n';
         std::cout << m;

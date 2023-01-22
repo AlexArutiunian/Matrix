@@ -32,18 +32,18 @@ int main(){
         m.trd_E(row1, row2, lyambda, EPS); 
       //  std::cout << m;
         matrix::math_matrix<T> m_copy(m);
-        T det = m_copy.det(EPS);
+        T det = m_copy.det_Bareiss(EPS);
      //   std::cout << "Треугольная форма:\n " << m_copy;
      //   std::cout << "determinant after transformatoins: " << det << "\n\n";
     }
     
     out_matrix << m;
 
-    T det = m.det(EPS);
+    T det = m.det_Bareiss(EPS);
     std::cout << det << std::endl; 
 
     std::ofstream after_3ng_form("after_3ng_form.txt");
-    m.triang_form(EPS);
+    m.triang_form_Bareiss(EPS);
     after_3ng_form << m;
     
 

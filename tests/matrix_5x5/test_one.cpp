@@ -16,11 +16,8 @@ int main(){
     matrix::math_matrix<T> m(n); 
 
     in_matrix >> m;
-    T det = m.det(EPS);
-    std::cout << det << std::endl; 
- 
 
-    std::ofstream out_matrix("out_m.txt");
+    std::ofstream out_matrix("out_mB.txt");
     
     for(int i = 0; i != 50; i++){
         int row1 = std::rand() % 6;
@@ -35,18 +32,19 @@ int main(){
         m.trd_E(row1, row2, lyambda, EPS); 
         out_matrix << m << std::endl;
         matrix::math_matrix<T> m_copy(m);
-        det = m_copy.det(EPS);
-        out_matrix << "triang form:\n " << m_copy << std::endl;
+        T det = m_copy.det_Bareiss(EPS);
+        out_matrix << "main element:\n" << m.find_max_() << std::endl;
+        out_matrix << "triang form:\n" << m_copy << std::endl;
         out_matrix << "det after transfom. : " << det << "\n\n";
     }
     
     
 
-    det = m.det(EPS);
+    T det = m.det_Bareiss(EPS);
     std::cout << det << std::endl; 
 
     std::ofstream after_3ng_form("after_3ng_form.txt");
-    m.triang_form(EPS);
+    m.triang_form_Gauss_max(EPS);
     after_3ng_form << m;
     
 

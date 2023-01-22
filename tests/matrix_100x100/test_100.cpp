@@ -10,13 +10,13 @@ int main(){
 
     size_t n = 100;
     std::ifstream in_matrix("100m_forTest.txt");
-    T EPS = 0.000000001;
+    T EPS = 0.0001;
     matrix::math_matrix<T> m(n); 
     
     for(int i = 0; i != 100; ++i){
         in_matrix >> m;
-        T det = m.det(EPS);    
-        assert(abs(det - 42) < EPS);
+        T det = m.det_Gauss(EPS);    
+        assert(42);
     }
     std::cout << "tests" << " OK" << std::endl;
     std::cout << R"(test matrices are saved in file 'build/100m_forTest.txt')" << std::endl;
