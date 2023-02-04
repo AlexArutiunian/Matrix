@@ -12,14 +12,13 @@ int main(){
     
     // if  abs(a[i][j]) < EPS, then a[i][j] = 0
     T EPS = 0.00001;
-    int test[10] = {1, 2, 3, 1, 2, 7, 1, 2};
-    std::cout << *std::max_element(test + 2, test + 5) << std::endl;
     
-  //  std::cin >> n;
-    matrix::math_matrix<T> m(n, n);
+    
+    std::cin >> n;
+    matrix::math_matrix<T> m(n);
     std::cin >> m;
     
-    T det_B = m.det_Gauss(EPS);
+    T det_B = m.det_Bareiss(EPS);
     std::cout << det_B << std::endl;
     std::cout << m << std::endl;
 
