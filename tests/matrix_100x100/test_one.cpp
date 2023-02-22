@@ -1,24 +1,28 @@
 #include <iostream>
 #include <fstream>
+
 #include "../../lib/matrix.hpp"
 
-using T = long double;
+using T = double;
 
 int main(){
 
     size_t n = 100;
     std::ifstream in_matrix("100x100.txt");
     
+    
     // if  abs(a[i][j]) < EPS, then a[i][j] = 0
-    T EPS = 0.000000000001;
+    T EPS = 0.0000000001;
     matrix::math_matrix<T> m(n); 
 
     in_matrix >> m;
-  //  std::cout << m;
 
-    std::ofstream out_matrix("out_m.txt");
+    std::ofstream out_matrix("out_mB.txt");
     
-    for(int i = 0; i != 1000; i++){
+    // Why dont work with i >= 55???
+    // with 100x100 it works but too long time
+
+    for(int i = 0; i != 200; i++){
         int row1 = std::rand() % 101;
         int row2 = std::rand() % 101;
         int lyambda = (std::rand() % 3) - 1;
@@ -26,24 +30,25 @@ int main(){
         if(!row1) row1 += 1;
         if(!row2) row2 += 1;
         if(row1 == row2) row1 += 1;
-      /*  std::cout <<  i << R"()) row numder ")" << row1 << 
-        R"(" + row number ")" << row2 <<
-        R"(" * )" << lyambda << std::endl;*/
+        out_matrix <<  i << R"()row numder ")" << row1 << R"(" + row number ")" << row2 <<
+        R"(" * )" << lyambda << std::endl;
         m.trd_E(row1, row2, lyambda, EPS); 
-      //  std::cout << m;
+        out_matrix << m << std::endl;
         matrix::math_matrix<T> m_copy(m);
         T det = m_copy.det_Bareiss(EPS);
-     //   std::cout << "Треугольная форма:\n " << m_copy;
-     //   std::cout << "determinant after transformatoins: " << det << "\n\n";
+        out_matrix << "main element:\n" << m.find_max_() << std::endl;
+        out_matrix << "triang form:\n" << m_copy << std::endl;
+        out_matrix << "det after transfom. : " << det << "\n\n";
+        std::cout << det << std::endl; 
     }
     
-    out_matrix << m;
+    
 
     T det = m.det_Bareiss(EPS);
     std::cout << det << std::endl; 
 
     std::ofstream after_3ng_form("after_3ng_form.txt");
-    m.triang_form_Bareiss(EPS);
+    m.triang_form_Gauss_max(EPS);
     after_3ng_form << m;
     
 

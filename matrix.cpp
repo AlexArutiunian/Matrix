@@ -21,11 +21,6 @@ int main(){
     T det_B = m.det_Bareiss(EPS);
     std::cout << det_B << std::endl;
     std::cout << m << std::endl;
-
-    
-
- 
-
     
 
 }

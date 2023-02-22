@@ -321,7 +321,7 @@ public:
         // variable 'permutation' for 
         // the control of swaping rows
 
-        int permutation = 0;
+        int permutation = 1;
         
         
         for(int i = 0; i != rs - 1; ++i){
@@ -338,9 +338,10 @@ public:
                     
                     if(p_m[(cs + 1) * i] == 0){
                         this->fst_E(j + 1, i + 1); 
+                        permutation *= (-1);
                     }
                     else{
-                        if(p_m[(cs + 1) * (i - 1)] == 0) return -1;
+                        if(p_m[(cs + 1) * (i - 1)] == 0) return -13;
                         else{
                             T coef = -(p_m[cs * j + i] / p_m[(cs + 1) * (i - 1)]);
                             this->snd_E(j + 1, ((*this)(i + 1, i + 1)) / p_m[(cs + 1) * (i - 1)]);
@@ -367,12 +368,13 @@ public:
             return 0;
         }    
         int per = this->triang_form_Bareiss(EPS);
-        if(per == -1){
+        if(per == -13){
             std::cout << "Row or colons of nulls is in matrix! => det = 0 " << std::endl;
             return 0;
         }    
         T det = 0;
-        return (*this)(cs, cs);
+        std::cout <<"Per: " << per << std::endl;
+        return (per) * (*this)(cs, cs);
     } 
 
     T det_Gauss(T EPS){

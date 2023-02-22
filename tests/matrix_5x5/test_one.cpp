@@ -19,7 +19,9 @@ int main(){
 
     std::ofstream out_matrix("out_mB.txt");
     
-    for(int i = 0; i != 50; i++){
+    // Why dont work with i >= 55???
+
+    for(int i = 0; i != 55; i++){
         int row1 = std::rand() % 6;
         int row2 = std::rand() % 6;
         int lyambda = (std::rand() % 3) - 1;
