@@ -11,7 +11,15 @@ int main(){
     size_t n = 100;
     std::ifstream in_matrix("NxN.txt");
     std::ofstream default_matrix("NxN.txt");
+
+    int number_tests = 10;
+
+    std::cout << "START TESTS (unit matrix transforms into random matrix)" << std::endl;
     
+    std::cout << "Input size of square matrix for testing: " << std::endl;
+    std::cin >> n;
+    std::cout << "Input number of matrixes for testing (recommend more than 100): " << std::endl;
+    std::cin >> number_tests;
     
     // if  abs(a[i][j]) < EPS, then a[i][j] = 0
     T EPS = 0.000000000001;
@@ -24,7 +32,7 @@ int main(){
     
     
 
-    for(int i = 0; i != 1000; i++){
+    for(int i = 0; i != number_tests + 1; ++i){
         int row1 = std::rand() % (n + 1);
         int row2 = std::rand() % (n + 1);
         int lyambda = (std::rand() % 3) - 1;
@@ -62,6 +70,8 @@ int main(){
         assert(( det - 1 ) <= 0.0001);
 
     }
+
+    std::cout << "Tests OK" << std::endl;
 
     std::cout << "Results are saved in file outNxN.txt";
 

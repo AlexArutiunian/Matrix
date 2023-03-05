@@ -449,7 +449,7 @@ public:
         T* p_m = base_::get_elems();
         T max = p_m[0];
         int i_max = 0;
-        for (int i = 1; i < cs * rs; i++) {
+        for (int i = 1; i < cs * rs; ++i) {
             if (abs(p_m[i]) > abs(max)) {
                 max = p_m[i];
                 i_max = i;
