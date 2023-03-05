@@ -20,7 +20,7 @@ int main(){
     in_matrix >> m;
     
 
-    std::ofstream out_matrix("outNxN.txt");
+    std::ofstream out_matrix("../build/outNxN.txt");
     
     
 
@@ -58,11 +58,11 @@ int main(){
         
         out_matrix << "triang form:\n" << m_copy << std::endl;
         out_matrix << "det after transfom. : " << det << "\n\n";
-        
-        std::cout << det << std::endl;
 
         assert(( det - 1 ) <= 0.0001);
 
     }
+
+    std::cout << "Results are saved in file outNxN.txt";
 
 }

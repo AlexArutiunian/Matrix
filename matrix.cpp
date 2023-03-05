@@ -13,14 +13,13 @@ int main(){
     // if  abs(a[i][j]) < EPS, then a[i][j] = 0
     T EPS = 0.00001;
     
-    
     std::cin >> n;
     matrix::math_matrix<T> m(n);
     std::cin >> m;
     
-    T det_B = m.det_Bareiss(EPS);
-    std::cout << det_B << std::endl;
-    std::cout << m << std::endl;
+    T det = m.det_Gauss(EPS);
+    std::cout << det << std::endl;
+   
     
 
 }
