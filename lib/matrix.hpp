@@ -152,7 +152,7 @@ public:
     // to overload operator <<
     */
 
-    void print(std::ostream& os){
+    void print(std::ostream& os) noexcept{
         for(int i = 1; i <= static_cast<int>(columns * rows); ++i){
             os << p_matrix[i - 1] << " ";  
             if(i % columns == 0) os << '\n';   
