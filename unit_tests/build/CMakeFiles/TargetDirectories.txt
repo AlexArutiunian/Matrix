@@ -1,3 +1,0 @@
-/home/arutiunian/GIT0203/Matrix_comfort/unit_tests/build/CMakeFiles/unit_test.dir
-/home/arutiunian/GIT0203/Matrix_comfort/unit_tests/build/CMakeFiles/edit_cache.dir
-/home/arutiunian/GIT0203/Matrix_comfort/unit_tests/build/CMakeFiles/rebuild_cache.dir
