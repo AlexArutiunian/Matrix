@@ -9,15 +9,15 @@ namespace matrix{
 template <typename T> class matrix_{
 private:
     size_t rows;     
-    size_t colums; 
+    size_t columns; 
     T* p_matrix;
 
 protected:
     size_t get_rows() const{
         return this->rows;
     }
-    size_t get_colums() const{
-        return this->colums;
+    size_t get_columns() const{
+        return this->columns;
     }
     T* get_elems() const{
         return this->p_matrix;
@@ -26,7 +26,7 @@ protected:
 public:   
     // two constuctors for matrix size of NxM
 
-    matrix_(size_t rs, size_t cs): rows(rs), colums(cs){
+    matrix_(size_t rs, size_t cs): rows(rs), columns(cs){
         p_matrix = new T[rs * cs];
         if(rs == cs){
             for(size_t i = 1; i != rs + 1; ++i){
@@ -42,7 +42,7 @@ public:
         }
     }     
 
-    matrix_(size_t rs, size_t cs, std::initializer_list<T> elems_matrix): rows(rs), colums(cs){
+    matrix_(size_t rs, size_t cs, std::initializer_list<T> elems_matrix): rows(rs), columns(cs){
         p_matrix = new T[cs * rs];
 
         /*
@@ -55,19 +55,19 @@ public:
 
     // two constuctors for matrix size of NxN (square_matrix)
     
-    matrix_(size_t size_m): rows(size_m), colums(size_m){
+    matrix_(size_t size_m): rows(size_m), columns(size_m){
         p_matrix = new T[size_m * size_m]; 
         for(size_t i = 1; i != rows + 1; ++i){
             (*(this))(i, i) = 1;
         }
     }
 
-    matrix_(size_t size_m, std::initializer_list<T> elems_matrix): rows(size_m), colums(size_m){
+    matrix_(size_t size_m, std::initializer_list<T> elems_matrix): rows(size_m), columns(size_m){
         p_matrix = new T[size_m * size_m];
         std::copy(elems_matrix.begin(), elems_matrix.end(), p_matrix);
     }
 
-    matrix_(size_t rs, size_t cs, T* elems_matrix): rows(rs), colums(cs){
+    matrix_(size_t rs, size_t cs, T* elems_matrix): rows(rs), columns(cs){
         p_matrix = new T[cs * rs];
         std::copy(elems_matrix[0], elems_matrix[cs * rs - 1], p_matrix);
     }
@@ -77,12 +77,12 @@ public:
     // the Rule of five
     */
    
-    matrix_(const matrix_& other_matrix): rows(other_matrix.rows), colums(other_matrix.colums){
-        p_matrix = new T[other_matrix.colums * other_matrix.rows];
-        std::copy_n(other_matrix.p_matrix, colums * rows, p_matrix);
+    matrix_(const matrix_& other_matrix): rows(other_matrix.rows), columns(other_matrix.columns){
+        p_matrix = new T[other_matrix.columns * other_matrix.rows];
+        std::copy_n(other_matrix.p_matrix, columns * rows, p_matrix);
     }
     
-    matrix_(matrix_&& other_matrix): p_matrix(nullptr), rows(0), colums(0){ 
+    matrix_(matrix_&& other_matrix): p_matrix(nullptr), rows(0), columns(0){ 
         swap(other_matrix);
     }
 
@@ -107,19 +107,19 @@ protected:
      
     void swap(matrix_& m){
         std::swap(p_matrix, m.p_matrix);
-        std::swap(colums, m.colums);
+        std::swap(columns, m.columns);
         std::swap(rows, m.rows);
     }
 
 public:
 
     T& operator() (const size_t i, const size_t j){
-        return p_matrix[colums * (i - 1)  + (j - 1)];
+        return p_matrix[columns * (i - 1)  + (j - 1)];
     }
 
     matrix_& operator= (std::initializer_list<T> elems_matrix){
 
-        assert(elems_matrix.size() == colums * rows);
+        assert(elems_matrix.size() == columns * rows);
         p_matrix = new T[elems_matrix.size()];
         
         std::copy(elems_matrix.begin(), elems_matrix.end(), p_matrix);
@@ -127,21 +127,21 @@ public:
     }
 
     matrix_& operator+= (const matrix_& other_m){
-        for(int i = 0; i != other_m.colums * other_m.rows; ++i){
+        for(int i = 0; i != other_m.columns * other_m.rows; ++i){
             this->p_matrix[i] += other_m.p_matrix[i];
         }
         return *this;
     }
 
     matrix_& operator-= (const matrix_& other_m){
-        for(int i = 0; i != other_m.colums * other_m.rows; ++i){
+        for(int i = 0; i != other_m.columns * other_m.rows; ++i){
             this->p_matrix[i] -= other_m.p_matrix[i];
         }
         return *this;
     }
 
     matrix_& read(std::istream& is, matrix_& m){
-        for(int i = 0; i < static_cast<int>(m.colums * m.rows); ++i){
+        for(int i = 0; i < static_cast<int>(m.columns * m.rows); ++i){
             is >> m.p_matrix[i];    
         }
         return m;
@@ -153,9 +153,9 @@ public:
     */
 
     void print(std::ostream& os){
-        for(int i = 1; i <= static_cast<int>(colums * rows); ++i){
+        for(int i = 1; i <= static_cast<int>(columns * rows); ++i){
             os << p_matrix[i - 1] << " ";  
-            if(i % colums == 0) os << '\n';   
+            if(i % columns == 0) os << '\n';   
         }
     }
 };   
@@ -191,12 +191,12 @@ template <typename T>
 class math_matrix: public matrix_<T> {
 private: 
     using base_ = matrix_<T>;
-   /* auto& colums_ = base_::colums;
+   /* auto& columns_ = base_::columns;
     using rows_ = base_<T>::rows;
     using p_elements = base_<T>::p_matrix;*/
 
     void check_col(int n1, int n2) const{
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
        
         if((n1 >= cs) || (n2 >= cs))
             throw std::invalid_argument("Don't touch alien memory!");
@@ -210,7 +210,7 @@ private:
     }
 
     void message_row_none(int n1, int n2) noexcept{
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         std::cout << "row " << n1 + 1 << " or row "
         << n2 + 1 << " does not exist" 
@@ -218,7 +218,7 @@ private:
     }
 
     void message_col_none(int n1, int n2) noexcept{
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         std::cout << "column " << n1 + 1 << " or column "
         << n2 + 1 << " does not exist" 
@@ -226,7 +226,7 @@ private:
     }
 
     void message_one_row(int n) noexcept{
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         std::cout << "row " << n + 1
         << " does not exist" 
@@ -291,7 +291,7 @@ public:
 
     void snd_E(int n, T a){
         n -= 1;
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
         try{
@@ -315,7 +315,7 @@ public:
         n1 -= 1;
         n2 -= 1;
         
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
         try{
@@ -337,7 +337,7 @@ public:
 
     void row_swap(int n1, int n2){
 
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
     
@@ -363,7 +363,7 @@ public:
 
     void col_swap(int n1, int n2){
         
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
         T temp;
@@ -386,7 +386,7 @@ public:
 
     int triang_form_Gauss_max(T EPS){
 
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
 
@@ -426,7 +426,7 @@ public:
             message_one_row(i);
         }
 
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
         i += 1;
@@ -444,7 +444,7 @@ public:
     // now only for square matrix
 
     std::pair<int, int> find_max_(){
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
         T max = p_m[0];
@@ -460,7 +460,7 @@ public:
 
     int triang_form_Gauss(T EPS){
 
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
 
@@ -484,7 +484,7 @@ public:
 
     T det_Gauss(T EPS){
 
-        size_t cs = base_::get_colums();
+        size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
 
