@@ -5,6 +5,7 @@
 #include <math.h>
 #include <cassert>
 
+
 namespace matrix{
 template <typename T> class matrix_{
 private:
@@ -56,7 +57,12 @@ public:
     // two constuctors for matrix size of NxN (square_matrix)
     
     matrix_(size_t size_m): rows(size_m), columns(size_m){
-        p_matrix = new T[size_m * size_m]; 
+        p_matrix = new T[size_m * size_m];
+        for(size_t i = 1; i != rows + 1; ++i){
+            for(size_t j = 1; j != columns + 1; ++j)
+                (*(this))(i, j) = 0;
+        
+        } 
         for(size_t i = 1; i != rows + 1; ++i){
             (*(this))(i, i) = 1;
         }
@@ -484,21 +490,26 @@ public:
 
     T det_Gauss(T EPS){
 
+
+        
         size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         T* p_m = base_::get_elems();
+        math_matrix<T> m_copy(cs, rs);
 
-        int per = this->triang_form_Gauss_max(EPS);
+        m_copy = *this;
+
+        int per = m_copy.triang_form_Gauss_max(EPS);
         T det = 0;
         if(cs != rs){
             std::cout << "It is not square matrix. I can not solve determinant" << std::endl;
             return 0;
         }    
         if(cs == rs){
-            if(p_m[cs * rs - 1] != 0){
-                det = p_m[0];
+            if(m_copy(cs, cs) != 0){
+                det = m_copy(1, 1);
                 for(int i = 1; i != static_cast<int>(cs); ++i)
-                    det *= p_m[(cs + 1) * i];
+                    det *= m_copy(i + 1, i + 1);
             }  
             else return 0;
         }
