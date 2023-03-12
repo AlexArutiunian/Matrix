@@ -29,53 +29,80 @@ public:
 
     matrix_(size_t rs, size_t cs): rows(rs), columns(cs){
         p_matrix = new T[rs * cs];
-        if(rs == cs){
-            for(size_t i = 1; i != rs + 1; ++i){
-                /*first way*/
+        try{
+            for(size_t i = 1; i != rows + 1; ++i){
+            for(size_t j = 1; j != columns + 1; ++j)
+                (*(this))(i, j) = 0;
+        
+            } 
+            if(rs == cs){
+                for(size_t i = 1; i != rs + 1; ++i){
+                    /*first way*/
 
-                //p_matrix[rs * i + i] = 1;
+                    //p_matrix[rs * i + i] = 1;
 
-                /*second way
-                in which order of operations is important */
+                    /*second way
+                    in which order of operations is important */
 
-                (*(this))(i, i) = 1;
+                    (*(this))(i, i) = 1;
+                }
             }
+
+        }catch(...){
+            throw;
         }
+        
     }     
 
     matrix_(size_t rs, size_t cs, std::initializer_list<T> elems_matrix): rows(rs), columns(cs){
         p_matrix = new T[cs * rs];
-
+        try {
+            std::copy(elems_matrix.begin(), elems_matrix.end(), p_matrix);
+        } catch (...) {
+            throw;
+        }
         /*
         // using more quick function copy (copying of 8 bites for one iteration)
-        // than for(...) (copying of 1 bites for one iteration)
+        // than for(...) (copying of 1 bites in one iteration)
         */
-
-        std::copy(elems_matrix.begin(), elems_matrix.end(), p_matrix);
     }
 
     // two constuctors for matrix size of NxN (square_matrix)
     
     matrix_(size_t size_m): rows(size_m), columns(size_m){
         p_matrix = new T[size_m * size_m];
-        for(size_t i = 1; i != rows + 1; ++i){
-            for(size_t j = 1; j != columns + 1; ++j)
-                (*(this))(i, j) = 0;
-        
-        } 
-        for(size_t i = 1; i != rows + 1; ++i){
-            (*(this))(i, i) = 1;
+        try{
+            for(size_t i = 1; i != rows + 1; ++i){
+                for(size_t j = 1; j != columns + 1; ++j)
+                    (*(this))(i, j) = 0;
+            
+                } 
+            for(size_t i = 1; i != rows + 1; ++i){
+                (*(this))(i, i) = 1;
+            }
+        }catch(...){
+            throw;
         }
+        
     }
 
     matrix_(size_t size_m, std::initializer_list<T> elems_matrix): rows(size_m), columns(size_m){
         p_matrix = new T[size_m * size_m];
-        std::copy(elems_matrix.begin(), elems_matrix.end(), p_matrix);
+        try{
+            std::copy(elems_matrix.begin(), elems_matrix.end(), p_matrix);
+        }catch(...){
+            throw;
+        }
+        
     }
 
     matrix_(size_t rs, size_t cs, T* elems_matrix): rows(rs), columns(cs){
         p_matrix = new T[cs * rs];
-        std::copy(elems_matrix[0], elems_matrix[cs * rs - 1], p_matrix);
+        try{
+            std::copy(elems_matrix[0], elems_matrix[cs * rs - 1], p_matrix);
+        }catch(...){
+            throw;
+        }    
     }
     
     
@@ -85,21 +112,25 @@ public:
    
     matrix_(const matrix_& other_matrix): rows(other_matrix.rows), columns(other_matrix.columns){
         p_matrix = new T[other_matrix.columns * other_matrix.rows];
-        std::copy_n(other_matrix.p_matrix, columns * rows, p_matrix);
+        try{
+            std::copy_n(other_matrix.p_matrix, columns * rows, p_matrix);
+        }catch(...){
+            throw;
+        }
     }
     
-    matrix_(matrix_&& other_matrix): p_matrix(nullptr), rows(0), columns(0){ 
+    matrix_(matrix_&& other_matrix) noexcept: p_matrix(nullptr), rows(0), columns(0) { 
         swap(other_matrix);
     }
 
 
-    matrix_& operator= (matrix_& other_m){
+    matrix_& operator= (matrix_& other_m) noexcept{
         matrix_ copy_(other_m);
         swap(copy_);
         return *this;
     }
 
-    matrix_& operator= (matrix_&& other_m){
+    matrix_& operator= (matrix_&& other_m) noexcept{
         swap(other_m);
         return *this;
     }
@@ -111,7 +142,7 @@ public:
 
 protected:     
      
-    void swap(matrix_& m){
+    void swap(matrix_& m) noexcept{
         std::swap(p_matrix, m.p_matrix);
         std::swap(columns, m.columns);
         std::swap(rows, m.rows);
@@ -164,6 +195,8 @@ public:
             if(i % columns == 0) os << '\n';   
         }
     }
+
+    
 };   
 
 /*
@@ -489,13 +522,16 @@ public:
     }
 
     T det_Gauss(T EPS){
-
-
-        
         size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
+
+        if (rs != cs) {
+            throw std::invalid_argument("Matrix must be square");
+        }
+
         T* p_m = base_::get_elems();
         math_matrix<T> m_copy(cs, rs);
+
 
         m_copy = *this;
 
@@ -531,6 +567,8 @@ public:
         T EPS = 0.00000001;
         return det_Gauss(EPS);
     } 
+
+    
 }; 
 
 } // namespace matrix

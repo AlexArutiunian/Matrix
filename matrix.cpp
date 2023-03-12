@@ -21,11 +21,7 @@ int main(){
     std::cin >> m;
     
     T det = m.det_Gauss(EPS);
+    
     std::cout << det << std::endl;
     
-
-    
-   
-    
-
 }
