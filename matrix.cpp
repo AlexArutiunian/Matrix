@@ -15,17 +15,13 @@ int main(){
 
     //if EPS * 0,1 then answer is ok
     EPS = 0.000000001;
-
     std::cin >> n;
+    matrix::math_matrix<T> m(n);
+  
+    std::cin >> m;
     
-
+    T det = m.det_Gauss(EPS);
     
-    matrix::math_matrix<T> M(n);
-    std::cin >> M;
-
-    std::cout << M.det_Gauss() << std::endl;
-
-    
-
+    std::cout << det << std::endl;
     
 }
