@@ -138,7 +138,7 @@ TEST(TestExceptions, test1) {
         // attempt to allocate matrix with too large dimensions
         matrix::matrix_<int> m(1000000000000000, 1000000000000000);
     }
-    catch (std::bad_alloc& e) {
+    catch(std::bad_alloc) {
         exception_thrown = true;
     }
     ASSERT_TRUE(exception_thrown);

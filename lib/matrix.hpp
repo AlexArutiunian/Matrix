@@ -64,7 +64,7 @@ protected:
             try{
                 arr_ = static_cast<T*>(::operator new(sizeof(T) * sz));
             }catch(std::bad_alloc){
-                std::cout << "Error with mem alloc";
+                std::cout << "Error with mem alloc\n";
                 throw;
             }
             
