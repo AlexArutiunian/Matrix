@@ -74,7 +74,7 @@ void test(size_t n, int number_tests, std::string filename){
 
     }
 
-    std::cout << "Tests OK with size " << n << std::endl;
+    std::cout << "Tests OK with size" << n << std::endl;
 
     std::cout << "Results are saved in file outNxN.txt" << std::endl;
 }
@@ -82,12 +82,12 @@ void test(size_t n, int number_tests, std::string filename){
 int main(){
     
     for(int i = 3; i != 10; ++i){
-        std::string file = "result/out" + std::to_string(i);
+        std::string file = "test/out" + std::to_string(i);
         file += ".txt";
         test(i, 100, file);
     }
     for(int i = 10; i != 15; ++i){
-        std::string file = "result/out" + std::to_string(i);
+        std::string file = "test/out" + std::to_string(i);
         file += ".txt";
         test(i, 200, file);
     }

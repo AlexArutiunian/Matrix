@@ -2,24 +2,9 @@
 #include <fstream>
 #include <cassert>
 
-#include <cstdlib>
-#include <unistd.h>
-
 #include "../lib/matrix.hpp"
 
 using T = double;
-
-void dot_come(){
-    std::cout << '.';
-    std::cout.flush();
-    usleep(100000); 
-}
-
-void dot_out(){
-    std::cout << '\b' << ' ' << '\b';
-    std::cout.flush();
-    usleep(100000);
-}
 
 int main(){
 
@@ -42,28 +27,15 @@ int main(){
     default_matrix << m;
     in_matrix >> m;
     
+
+    std::ofstream out_matrix("outNxN.txt");
     
-    std::ofstream out_matrix("../build/outNxN.txt");
     
-    std::cout << "testing in progress";
 
     for(int i = 0; i != number_tests + 1; ++i){
-       
-        if(i % 50 == 0){
-            dot_come();
-            dot_come();
-            dot_come();
-        }
-        if(i % 50 == 0){
-            dot_out();
-            dot_out();
-            dot_out();
-        }
-        
-        
         int row1 = std::rand() % (n + 1);
         int row2 = std::rand() % (n + 1);
-        int lyambda = (std::rand() % 3) - 1;
+        int lyambda = (std::rand() % 2) - 1;
         if(!lyambda) lyambda += 1;
         if(!row1) row1 += 1;
         if(!row2) row2 += 1;
@@ -92,19 +64,14 @@ int main(){
         m_copy = m;
         T det = m_copy.det_Gauss();
         
-        out_matrix << "Matrix\n" << m_copy << std::endl;
+        out_matrix << "triang form:\n" << m_copy << std::endl;
         out_matrix << "det after transfom. : " << det << "\n\n";
-        
-        if(( det - 1 ) > 0.0001){
-            out_matrix << "Error with matrix\n" << m_copy << std::endl;
-            out_matrix << "det = " << det << std::endl;
-            assert(( det - 1 ) <= 0.0001);
-        }
-        
+
+        assert(abs( det - 1 ) <= 0.0001);
 
     }
 
-    std::cout << "\nTests OK" << std::endl;
+    std::cout << "Tests OK" << std::endl;
 
     std::cout << "Results are saved in file outNxN.txt";
 
