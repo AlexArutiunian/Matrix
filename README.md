@@ -17,6 +17,15 @@ cmake --build .
 ```
 ## How to test?
 
+```bash
+bash build.sh
+./tests_matrix
+```
+
+Next you can test with transform unit matrix (E nxn).
+Input data: size of unit matrix (n) and number of tests.
+
+
 ## What is interesting?
 
 Using class matrix_buf for safety of exceptions
