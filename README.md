@@ -1,8 +1,8 @@
 ### Matrix
 
-##How to make?
+## How to make?
 
-#On Linux:
+# On Linux:
 
 with script from the repo
 ```bash
