@@ -99,13 +99,13 @@ private:
 
 protected:
     size_t get_rows() const{
-        return this->rows;
+        return rows;
     }
     size_t get_columns() const{
-        return this->columns;
+        return columns;
     }
     T* get_elems() const{
-        return this->p_matrix;
+        return p_matrix;
     }
 
 public:   
@@ -256,14 +256,14 @@ public:
 
     matrix_& operator+= (const matrix_& other_m){
         for(int i = 0; i != other_m.columns * other_m.rows; ++i){
-            this->p_matrix[i] += other_m.p_matrix[i];
+            p_matrix[i] += other_m.p_matrix[i];
         }
         return *this;
     }
 
     matrix_& operator-= (const matrix_& other_m){
         for(int i = 0; i != other_m.columns * other_m.rows; ++i){
-            this->p_matrix[i] -= other_m.p_matrix[i];
+            p_matrix[i] -= other_m.p_matrix[i];
         }
         return *this;
     }
