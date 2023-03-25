@@ -220,7 +220,7 @@ public:
     }
 
 
-    matrix_& operator= (matrix_& other_m) noexcept{
+    matrix_& operator= (matrix_& other_m){
         matrix_ copy_(other_m);
         swap(copy_);
         return *this;
@@ -230,9 +230,6 @@ public:
         swap(other_m);
         return *this;
     }
-   
-   
-
 
 protected:     
      
@@ -283,7 +280,7 @@ public:
     // to overload operator <<
     */
 
-    void print(std::ostream& os) noexcept{
+    void print(std::ostream& os){
         for(int i = 1; i <= static_cast<int>(columns * rows); ++i){
             os << p_matrix[i - 1] << " ";  
             if(i % columns == 0) os << '\n';   
@@ -342,7 +339,7 @@ private:
             throw std::invalid_argument("Don't touch alien memory!");
     }
 
-    void message_row_none(int n1, int n2) noexcept{
+    void message_row_none(int n1, int n2){
         size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         std::cout << "row " << n1 + 1 << " or row "
@@ -350,7 +347,7 @@ private:
         << " in matrix " << rs << "x" << cs << std::endl;
     }
 
-    void message_col_none(int n1, int n2) noexcept{
+    void message_col_none(int n1, int n2){
         size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         std::cout << "column " << n1 + 1 << " or column "
@@ -358,7 +355,7 @@ private:
         << " in matrix " << rs << "x" << cs << std::endl;
     }
 
-    void message_one_row(int n) noexcept{
+    void message_one_row(int n){
         size_t cs = base_::get_columns();
         size_t rs = base_::get_rows();
         std::cout << "row " << n + 1
