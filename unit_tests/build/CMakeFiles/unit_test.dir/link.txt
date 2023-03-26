@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/unit_test.dir/unit_tests.cpp.o -o unit_test  -lgtest -lgmock -lpthread 

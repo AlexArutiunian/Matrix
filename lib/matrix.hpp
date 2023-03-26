@@ -503,6 +503,23 @@ public:
       
     }
 
+    int find_abs_max_in_row(int i){
+        
+        size_t cs = base_::get_columns();
+        size_t rs = base_::get_rows();
+        T* p_m = base_::get_elems();
+        T max = p_m[i * cs];
+        int i_max = 0;
+        for (int j = 0; j != cs; j++) {
+            if (abs(p_m[i * cs + j]) > abs(max)) {
+                max = p_m[i * cs + j];
+                i_max = j;
+            }
+        }
+        return i_max + 1;
+    }
+
+
     int triang_form_Gauss_max(T EPS){
 
         size_t cs = base_::get_columns();
@@ -519,44 +536,31 @@ public:
         
             for(int j = i + 1; j != cs; ++j){
                                
-                int j_max = find_max_in_row(i);
-                col_swap(j_max, j);
-                if(j_max != j)
+                int j_max = find_abs_max_in_row(i);
+                
+                if(((j_max - 1 + cs * i) % (cs + 1) != 0) && (j_max != j)){
+                    col_swap(j_max, j);
                     permutation += 1;
+                } 
                               
                 if(p_m[(cs + 1) * i] == 0){
                     
                     permutation += 1;
                     
-                    this->fst_E(j + 1, i + 1); 
+                    fst_E(j + 1, i + 1); 
                 }    
-                else this->trd_E(j + 1, i + 1, -(p_m[cs * j + i] / p_m[(cs + 1) * i]), EPS);  
+                else{
+                    T coeff = -(p_m[cs * j + i] / p_m[(cs + 1) * i]);
+                    trd_E(j + 1, i + 1, coeff, EPS);
+                }   
+                
             }
                                         
         }        
         return permutation;     
     }
 
-    int find_max_in_row(int i){
-
-       
-        check_row(i, i);       
-        
-
-        size_t cs = base_::get_columns();
-        size_t rs = base_::get_rows();
-        T* p_m = base_::get_elems();
-        i += 1;
-        T max = p_m[i * cs];
-        int i_max = 0;
-        for (int j = 1; j != cs; j++) {
-            if (abs(p_m[i * cs + j]) > abs(max)) {
-                max = p_m[i * cs + j];
-                i_max = j;
-            }
-        }
-        return i_max + 1;
-    }
+    
 
     // now only for square matrix
 
@@ -572,7 +576,7 @@ public:
                 i_max = i;
             }
         }
-        return std::pair<int, int>(i_max / cs + 1, i_max % cs + 1);
+        return std::make_pair(i_max / cs + 1, i_max % cs + 1);
     }  
 
     int triang_form_Gauss(T EPS){
@@ -591,9 +595,9 @@ public:
             for(int j = i + 1; j != cs; ++j){
                 if(p_m[(cs + 1) * i] == 0){
                     permutation *= (-1);
-                    this->fst_E(j + 1, i + 1); 
+                    fst_E(j + 1, i + 1); 
                 }    
-                else this->trd_E(j + 1, i + 1, -(p_m[cs * j + i] / p_m[(cs + 1) * i]), EPS);  
+                else trd_E(j + 1, i + 1, -(p_m[cs * j + i] / p_m[(cs + 1) * i]), EPS);  
             }              
         }  
         return permutation;     
@@ -608,10 +612,10 @@ public:
         }
 
         T* p_m = base_::get_elems();
-        math_matrix<T> m_copy(cs, rs);
+        math_matrix<T> m_copy(cs, rs, p_m);
 
+        
 
-        m_copy = *this;
 
         int per = m_copy.triang_form_Gauss_max(EPS);
         T det = 0;
