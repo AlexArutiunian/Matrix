@@ -1,3 +1,0 @@
-/home/arutiunian/M2503/test/Matrix/unit_tests/build/CMakeFiles/unit_test.dir
-/home/arutiunian/M2503/test/Matrix/unit_tests/build/CMakeFiles/edit_cache.dir
-/home/arutiunian/M2503/test/Matrix/unit_tests/build/CMakeFiles/rebuild_cache.dir
