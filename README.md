@@ -4,7 +4,7 @@
 
 ### On Linux:
 
-with script from the repo
+by script from the repo
 ```bash
 bash build.sh
 ```
