@@ -1,5 +1,15 @@
 # Matrix
 
+Example:<br>
+Input:
+```bash
+2 1 0 0 1
+```
+Outout:
+```bash
+1
+```
+
 ## How to make?
 
 ### On Linux:
