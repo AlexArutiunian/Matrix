@@ -1,46 +1,31 @@
-# Matrix
+### Решение задачи 1.1 для 3 варианта
 
-Example:<br>
-Input:
-```bash
-2 1 0 0 1
+#### Дано:
+- **Прибор**: Фазометр  
+- **Диапазон измерений**: -90° ... +90°  
+- **Класс точности**: 1.5  
+
+#### Формула для расчета абсолютной погрешности:
 ```
-Output:
-```bash
-1
-```
-
-## How to make?
-
-### On Linux:
-
-with script from the repo
-```bash
-bash build.sh
-```
-or using standart cmake command
-```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
-```
-## How to test?
-
-```bash
-bash build.sh
-./tests_matrix
+Δ = Диапазон измерений × (Класс точности / 100)
 ```
 
-Next you can test with transform unit matrix (E nxn).
-Input data: size of unit matrix (n) and number of tests.
+1. **Определяем диапазон измерений:**
+```
+Диапазон измерений = максимальное значение - минимальное значение
+Диапазон измерений = (+90°) - (-90°) = 180°
+```
+
+2. **Рассчитываем абсолютную погрешность:**
+```
+Δ = 180° × (1.5 / 100)
+Δ = 180° × 0.015 = 2.7°
+```
+
+#### Ответ:
+Абсолютная погрешность измерений для фазометра в 3 варианте составляет:
+```
+Δ = 2.7°
+```
 
 
-
-## What is interesting?
-
-Using class matrix_buf for safety of exceptions
-by memory allocation and free.
-(it can be checked in valgrind)
-K. Vladimirov great explained this problem 
-in his [lecture 11](https://www.youtube.com/watch?v=P1LcWg6K3WE&list=PL3BR09unfgciJ1_K_E914nohpiOiHnpsK&index=12) and [lecture 12](https://www.youtube.com/watch?v=d0iqsUx_Aow&list=PL3BR09unfgciJ1_K_E914nohpiOiHnpsK&index=13). 
